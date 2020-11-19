@@ -15,7 +15,7 @@ public:
 	virtual void update() override;
 	virtual void clean() override;
 	void move();
-	void reset();
+	void reset(float velY, float accY);
 	bool active = false;
 private:
 	void m_buildAnimations();

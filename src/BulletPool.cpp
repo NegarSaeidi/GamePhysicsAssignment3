@@ -27,9 +27,9 @@ Bullet* BulletPool::BulletSpawn()
 	return newBullet;
 }
 
-void BulletPool::BulletDespawn(Bullet* bullet)
+void BulletPool::BulletDespawn(Bullet* bullet,float velY,float accY)
 {
-	bullet->reset();
+	bullet->reset(velY,accY);
 	inactive.push_back(bullet);
 	for (std::vector<Bullet*>::iterator myiter = active.begin(); myiter != active.end(); myiter++)
 	{

@@ -8,6 +8,7 @@
 #include "Button.h"
 #include "Label.h"
 #include "BulletPool.h"
+#include "CollisionManager.h"
 
 class PlayScene : public Scene
 {
@@ -22,14 +23,21 @@ public:
 	virtual void handleEvents() override;
 	virtual void start() override;
 	void collision();
+
 private:
+	 float BulletsVelocity;
+	 float Bulletsacceleration;
+	 float playerVel=2.5;
+	bool activateScene;
+	Bullet* bullet;
 	// IMGUI Function
-	void GUI_Function() const;
+	void GUI_Function() ;
 	std::string m_guiTitle;
-	
+	void spawnBullet();
 	glm::vec2 m_mousePosition;
 	BulletPool* m_pPool;
-   
+	const float bulletSpawnTimeDuration=700.0f;
+	float bulletSpawnTimerStart;
 	Player* m_pPlayer;
 	bool m_playerFacingRight;
 

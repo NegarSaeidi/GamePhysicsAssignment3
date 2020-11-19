@@ -16,7 +16,7 @@ Bullet::Bullet()
 	getTransform()->position = glm::vec2(400.0f, 200.0f);
 	
 	setType(PLANE);
-	reset();
+	reset(100.0f,9.8f);
 	//m_buildAnimations();
 }
 Bullet::~Bullet()
@@ -31,6 +31,7 @@ void Bullet::draw()
 		const auto y = getTransform()->position.y;
 
 		// draw the target
+		if(getRigidBody()->isColliding==false)
 		TextureManager::Instance()->draw("bullet", x, y, 0, 255, true);
 	}
 }
@@ -54,10 +55,10 @@ void Bullet::move()
 	
 }
 
-void Bullet::reset()
+void Bullet::reset(float velY,float accY)
 {
-	getRigidBody()->velocity = glm::vec2(0.0f, 2.7f);
-	getRigidBody()->acceleration = glm::vec2(0.0f, 9.8f*4);
+	getRigidBody()->velocity = glm::vec2(0.0f, velY);
+	getRigidBody()->acceleration = glm::vec2(0.0f, accY);
 	getRigidBody()->isColliding = false;
 	active = false;
 }

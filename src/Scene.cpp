@@ -33,7 +33,7 @@ void Scene::addChild(DisplayObject * child, uint32_t layer_index, std::optional<
 
 void Scene::removeChild(DisplayObject* child)
 {
-	delete child;
+	//delete child;
 	m_displayList.erase(std::remove(m_displayList.begin(), m_displayList.end(), child), m_displayList.end());
 }
 

@@ -10,7 +10,8 @@
 PlayScene::PlayScene()
 {
 	TextureManager::Instance()->load("../Assets/textures/scene1.png", "background");
-	
+	BulletsVelocity = 100.0f;
+	Bulletsacceleration = 9.8f;
 	PlayScene::start();
 }
 
@@ -31,9 +32,28 @@ void PlayScene::draw()
 
 void PlayScene::update()
 {
-	
 	updateDisplayList();
-	collision();
+	if (activateScene)
+	{
+	
+		if (SDL_GetTicks() - bulletSpawnTimerStart >= bulletSpawnTimeDuration)
+		{
+			spawnBullet();
+		}
+		collision();
+		for (std::vector<Bullet*>::iterator myiter = m_pPool->active.begin(); myiter != m_pPool->active.end(); myiter++)
+		{
+			Bullet* tempBullet = *myiter;
+			if ((*myiter)->getTransform()->position.y >= 650)
+			{
+				m_pPool->BulletDespawn(tempBullet, BulletsVelocity,Bulletsacceleration);
+				removeChild(tempBullet);
+				break;
+
+			}
+		}
+	}
+
 }
 
 void PlayScene::clean()
@@ -124,85 +144,72 @@ void PlayScene::handleEvents()
 void PlayScene::start()
 {
 	// Set GUI Title
+
 	m_guiTitle = "Play Scene";
 	
 	 //Bullet Sprite
 	m_pPool = new BulletPool(10);
-	for (int i = 0 ; i < 10; i++)
-	{
-		Bullet* temp = m_pPool->BulletSpawn();
-		if (temp)
-		{
-			addChild(temp);
-			temp->getTransform()->position = glm::vec2(50 + rand() % 700, -100+rand()%50);
-			
-		}
-	}
+	bulletSpawnTimerStart = SDL_GetTicks();
 	// Player Sprite
 	m_pPlayer = new Player();
 	addChild(m_pPlayer);
 	m_playerFacingRight = true;
 
-	// Back Button
-	//m_pBackButton = new Button("../Assets/textures/backButton.png", "backButton", BACK_BUTTON);
-	//m_pBackButton->getTransform()->position = glm::vec2(300.0f, 400.0f);
-	//m_pBackButton->addEventListener(CLICK, [&]()-> void
-	//{
-	//	m_pBackButton->setActive(false);
-	//	TheGame::Instance()->changeSceneState(START_SCENE);
-	//});
+	m_pBackButton = new Button("../Assets/textures/back.png", "back", BACK_BUTTON);
+	m_pBackButton->getTransform()->position = glm::vec2(700.0f, 50.0f);
+	m_pBackButton->addEventListener(CLICK, [&]()-> void
+		{
+			m_pBackButton->setActive(false);
+			TheGame::Instance()->changeSceneState(START_SCENE);
+		});
 
-	//m_pBackButton->addEventListener(MOUSE_OVER, [&]()->void
-	//{
-	//	m_pBackButton->setAlpha(128);
-	//});
+	m_pBackButton->addEventListener(MOUSE_OVER, [&]()->void
+		{
+			m_pBackButton->setAlpha(128);
+		});
 
-	//m_pBackButton->addEventListener(MOUSE_OUT, [&]()->void
-	//{
-	//	m_pBackButton->setAlpha(255);
-	//});
-	//addChild(m_pBackButton);
+	m_pBackButton->addEventListener(MOUSE_OUT, [&]()->void
+		{
+			m_pBackButton->setAlpha(255);
+		});
+	addChild(m_pBackButton);
 
-	//// Next Button
-	//m_pNextButton = new Button("../Assets/textures/nextButton.png", "nextButton", NEXT_BUTTON);
-	//m_pNextButton->getTransform()->position = glm::vec2(500.0f, 400.0f);
-	//m_pNextButton->addEventListener(CLICK, [&]()-> void
-	//{
-	//	m_pNextButton->setActive(false);
-	//	TheGame::Instance()->changeSceneState(END_SCENE);
-	//});
-
-	//m_pNextButton->addEventListener(MOUSE_OVER, [&]()->void
-	//{
-	//	m_pNextButton->setAlpha(128);
-	//});
-
-	//m_pNextButton->addEventListener(MOUSE_OUT, [&]()->void
-	//{
-	//	m_pNextButton->setAlpha(255);
-	//});
-
-	//addChild(m_pNextButton);
-
-	///* Instructions Label */
-	//m_pInstructionsLabel = new Label("Press the backtick (`) character to toggle Debug View", "Consolas");
-	//m_pInstructionsLabel->getTransform()->position = glm::vec2(Config::SCREEN_WIDTH * 0.5f, 500.0f);
-
-	//addChild(m_pInstructionsLabel);
 }
 
 void PlayScene::collision()
 {
-	//if ((m_pPlayer->getTransform()->position.x <= m_pBulletSprite->getTransform()->position.x) &&
-	//	(m_pPlayer->getTransform()->position.x + m_pPlayer->getWidth() >= m_pBulletSprite->getTransform()->position.x + m_pBulletSprite->getWidth()) &&
-	//	(m_pPlayer->getTransform()->position.y <= m_pBulletSprite->getTransform()->position.y) &&
-	//	(m_pBulletSprite->getTransform()->position.y <m_pPlayer->getTransform()->position.y + m_pPlayer->getHeight())
-	//	)
-	//	SoundManager::Instance().playSound("boom", 0);
+	
+
+	for (std::vector<Bullet*>::iterator myiter = m_pPool->active.begin(); myiter != m_pPool->active.end(); myiter++)
+	{
+		Bullet* tempBullet = *myiter;
+		if (CollisionManager::squaredRadiusCheck((*myiter), m_pPlayer))
+		{
+			if (tempBullet->getRigidBody()->isColliding == false)
+			{
+				
+				SoundManager::Instance().playSound("boom", 0);
+				tempBullet->getRigidBody()->isColliding = true;
+			}
+
+		}
+	}
+		
 		
 }
 
-void PlayScene::GUI_Function() const
+void PlayScene::spawnBullet()
+{
+	 bullet = m_pPool->BulletSpawn();
+	if (bullet)
+	{
+		addChild(bullet);
+		bullet->getTransform()->position = glm::vec2(50 + rand() % 700, 0);
+	}
+	bulletSpawnTimerStart = SDL_GetTicks();
+}
+
+void PlayScene::GUI_Function() 
 {
 	// Always open with a NewFrame
 	ImGui::NewFrame();
@@ -210,24 +217,31 @@ void PlayScene::GUI_Function() const
 	// See examples by uncommenting the following - also look at imgui_demo.cpp in the IMGUI filter
 	//ImGui::ShowDemoWindow();
 	
-	ImGui::Begin("Your Window Title Goes Here", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("Change the variables", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
 
-	if(ImGui::Button("My Button"))
+	if(ImGui::Button("Activate"))
 	{
-		std::cout << "My Button Pressed" << std::endl;
+		 activateScene = true;
 	}
 
 	ImGui::Separator();
 
-	static float float3[3] = { 0.0f, 1.0f, 1.5f };
-	if(ImGui::SliderFloat3("My Slider", float3, 0.0f, 2.0f))
-	{
-		std::cout << float3[0] << std::endl;
-		std::cout << float3[1] << std::endl;
-		std::cout << float3[2] << std::endl;
-		std::cout << "---------------------------\n";
-	}
 	
+	if (ImGui::SliderFloat("Bullets' velocity", &BulletsVelocity, 0.0f, 400.0f))
+	{
+
+		for (std::vector<Bullet*>::iterator myiter = m_pPool->active.begin(); myiter != m_pPool->active.end(); myiter++)
+		{
+			Bullet* tempBullet = *myiter;
+			tempBullet->getRigidBody()->velocity.y = BulletsVelocity;
+
+		}
+	}
+	if (ImGui::SliderFloat("Player's velocity", &playerVel, 1.0f, 10.f))
+	{
+
+		m_pPlayer->getRigidBody()->velocity.x = playerVel;
+	}
 	ImGui::End();
 
 	// Don't Remove this
