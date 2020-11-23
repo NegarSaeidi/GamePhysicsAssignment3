@@ -1,13 +1,13 @@
 #pragma once
-#ifndef __TARGET__
-#define __TARGET__
+#ifndef __BRICK__
+#define __BRICK__
 
 #include "DisplayObject.h"
 
-class Target final : public DisplayObject {
+class Brick final : public DisplayObject {
 public:
-	Target();
-	~Target();
+	Brick();
+	~Brick();
 
 	// Inherited via GameObject
 	virtual void draw() override;

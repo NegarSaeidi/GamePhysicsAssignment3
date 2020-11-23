@@ -4,7 +4,7 @@
 
 #include "Scene.h"
 #include "Bullet.h"
-#include "Player.h"
+#include "Brick.h"
 #include "Button.h"
 #include "Label.h"
 
@@ -28,7 +28,7 @@ private:
 	glm::vec2 m_mousePosition;
 
 	Bullet* m_pBulletSprite;
-	Player* m_pPlayer;
+	Brick* m_pBrick;
 	bool m_playerFacingRight;
 
 	// UI Items

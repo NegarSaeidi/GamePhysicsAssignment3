@@ -40,6 +40,7 @@ void SecondScene::clean()
 
 void SecondScene::handleEvents()
 {
+
 	EventManager::Instance().update();
 
 	// handle player movement with GameController
@@ -50,23 +51,21 @@ void SecondScene::handleEvents()
 			const auto deadZone = 10000;
 			if (EventManager::Instance().getGameController(0)->LEFT_STICK_X > deadZone)
 			{
-				m_pPlayer->setAnimationState(PLAYER_RUN_RIGHT);
-				m_playerFacingRight = true;
 			}
 			else if (EventManager::Instance().getGameController(0)->LEFT_STICK_X < -deadZone)
 			{
-				m_pPlayer->setAnimationState(PLAYER_RUN_LEFT);
+				
 				m_playerFacingRight = false;
 			}
 			else
 			{
 				if (m_playerFacingRight)
 				{
-					m_pPlayer->setAnimationState(PLAYER_IDLE_RIGHT);
+					
 				}
 				else
 				{
-					m_pPlayer->setAnimationState(PLAYER_IDLE_LEFT);
+					
 				}
 			}
 		}
@@ -76,27 +75,12 @@ void SecondScene::handleEvents()
 	// handle player movement if no Game Controllers found
 	if (SDL_NumJoysticks() < 1)
 	{
-		if (EventManager::Instance().isKeyDown(SDL_SCANCODE_A))
+		if (EventManager::Instance().getMouseButton(0))
 		{
-			m_pPlayer->setAnimationState(PLAYER_RUN_LEFT);
-			m_playerFacingRight = false;
+			m_pBrick->getTransform()->position = EventManager::Instance().getMousePosition();
+			
 		}
-		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_D))
-		{
-			m_pPlayer->setAnimationState(PLAYER_RUN_RIGHT);
-			m_playerFacingRight = true;
-		}
-		else
-		{
-			if (m_playerFacingRight)
-			{
-				m_pPlayer->setAnimationState(PLAYER_IDLE_RIGHT);
-			}
-			else
-			{
-				m_pPlayer->setAnimationState(PLAYER_IDLE_LEFT);
-			}
-		}
+		
 	}
 
 
@@ -116,6 +100,8 @@ void SecondScene::handleEvents()
 	}
 }
 
+
+
 void SecondScene::start()
 {
 	// Set GUI Title
@@ -126,8 +112,8 @@ void SecondScene::start()
 	addChild(m_pBulletSprite);*/
 
 	// Player Sprite
-	m_pPlayer = new Player();
-	addChild(m_pPlayer);
+	m_pBrick = new Brick();
+	addChild(m_pBrick);
 	m_playerFacingRight = true;
 
 	// Back Button

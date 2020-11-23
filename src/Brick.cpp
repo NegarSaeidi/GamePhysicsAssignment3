@@ -1,25 +1,25 @@
-#include "Target.h"
+#include "Brick.h"
 #include "TextureManager.h"
 
 
-Target::Target()
+Brick::Brick()
 {
-	TextureManager::Instance()->load("../Assets/textures/Circle.png","circle");
+	TextureManager::Instance()->load("../Assets/textures/brick.png", "circle");
 
 	const auto size = TextureManager::Instance()->getTextureSize("circle");
 	setWidth(size.x);
 	setHeight(size.y);
-	getTransform()->position = glm::vec2(100.0f, 100.0f);
+	getTransform()->position = glm::vec2(280.0f, 540.0f);
 	getRigidBody()->velocity = glm::vec2(0, 0);
 	getRigidBody()->isColliding = false;
 
 	setType(TARGET);
 }
 
-Target::~Target()
+Brick::~Brick()
 = default;
 
-void Target::draw()
+void Brick::draw()
 {
 	// alias for x and y
 	const auto x = getTransform()->position.x;
@@ -29,25 +29,25 @@ void Target::draw()
 	TextureManager::Instance()->draw("circle", x, y, 0, 255, true);
 }
 
-void Target::update()
+void Brick::update()
 {
 	m_move();
 	m_checkBounds();
 }
 
-void Target::clean()
+void Brick::clean()
 {
 }
 
-void Target::m_move()
+void Brick::m_move()
 {
 	getTransform()->position = getTransform()->position + getRigidBody()->velocity * 5.0f;
 }
 
-void Target::m_checkBounds()
+void Brick::m_checkBounds()
 {
 }
 
-void Target::m_reset()
+void Brick::m_reset()
 {
 }
