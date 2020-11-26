@@ -4,7 +4,7 @@
 
 #include "DisplayObject.h"
 #include "Util.h"
-
+#include "BallShape.h"
 class Ball final : public DisplayObject {
 public:
 	Ball();
@@ -20,7 +20,8 @@ private:
 	void m_move();
 	void m_checkBounds();
 	void m_reset();
-
+	
+	BallShape ballshape;
 	float loss;
 	float radius;
 };
