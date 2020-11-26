@@ -19,10 +19,12 @@ public:
 	void moveRight();
 	// setters
 	void setAnimationState(PlayerAnimationState new_state);
-
+	void stop();
 private:
+	float ACCELERATION= 1;
+	float SPEED =1.0f;
 	void m_buildAnimations();
-
+	glm::vec2 m_pDirection;
 	PlayerAnimationState m_currentAnimationState;
 };
 

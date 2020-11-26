@@ -1,4 +1,5 @@
 #include "Brick.h"
+#include "Util.h"
 #include "TextureManager.h"
 
 
@@ -11,8 +12,9 @@ Brick::Brick()
 	setHeight(size.y);
 	getTransform()->position = glm::vec2(280.0f, 540.0f);
 	getRigidBody()->velocity = glm::vec2(0, 0);
+	getRigidBody()->acceleration = glm::vec2(0, 0);
 	getRigidBody()->isColliding = false;
-
+	m_pDirection = glm::vec2(0.0f, 0.0f);
 	setType(TARGET);
 }
 
@@ -39,9 +41,46 @@ void Brick::clean()
 {
 }
 
+void Brick::setDir(glm::vec2 dir)
+{
+	m_pDirection = dir;
+	
+}
+
+
+
+void Brick::stop()
+{
+	m_pDirection = glm::vec2(0, 0);
+}
+
 void Brick::m_move()
 {
-	getTransform()->position = getTransform()->position + getRigidBody()->velocity * 5.0f;
+	
+	//getTransform()->position = getTransform()->position + getRigidBody()->velocity * 5.0f;
+	const float deltaTIme = 1.0f / 60.0f;
+	float dirMagnitude = Util::magnitude(m_pDirection);
+	if (dirMagnitude > 0)
+	{
+		std::cout << "moving\n";
+		getRigidBody()->acceleration = Util::normalize(m_pDirection) * ACCELERATION;
+	}
+	else if (Util::magnitude(getRigidBody()->velocity) > 10)
+	{
+		std::cout << "slowing\n";
+		getRigidBody()->acceleration = Util::normalize(getRigidBody()->velocity) * -ACCELERATION;
+	}
+	else
+	{
+		std::cout << "ending\n";
+		getRigidBody()->acceleration = glm::vec2(-getRigidBody()->velocity.x, -getRigidBody()->velocity.y);
+	}
+
+	getRigidBody()->velocity += getRigidBody()->acceleration;
+	glm::vec2 pos = getTransform()->position;
+	pos.x += getRigidBody()->velocity.x * deltaTIme;
+	pos.y += getRigidBody()->velocity.y * deltaTIme;
+	getTransform()->position = pos;
 }
 
 void Brick::m_checkBounds()

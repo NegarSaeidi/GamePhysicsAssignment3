@@ -73,6 +73,7 @@ bool Game::init(const char* title, const int x, const int y, const int width, co
 			SoundManager::Instance().load("../Assets/audio/boom.wav", "boom", SOUND_SFX);
 			SoundManager::Instance().load("../Assets/audio/Menu.mp3", "menu", SOUND_MUSIC);
 			SoundManager::Instance().load("../Assets/audio/scene1.mp3", "scene1", SOUND_MUSIC);
+			SoundManager::Instance().load("../Assets/audio/scene2.mp3", "scene2", SOUND_MUSIC);
 			// Initialize Font Support
 			if (TTF_Init() == -1)
 			{

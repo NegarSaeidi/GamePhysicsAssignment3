@@ -106,21 +106,27 @@ void PlayScene::handleEvents()
 			m_pPlayer->moveLeft();
 			m_playerFacingRight = false;
 		}
+		
 		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_D))
 		{
 			m_pPlayer->setAnimationState(PLAYER_RUN_RIGHT);
 			m_pPlayer->moveRight();
 			m_playerFacingRight = true;
 		}
+			//m_pPlayer->setAnimationState(PLAYER_RUN_RIGHT);
+		
+		
 		else
 		{
 			if (m_playerFacingRight)
 			{
 				m_pPlayer->setAnimationState(PLAYER_IDLE_RIGHT);
+				m_pPlayer->stop();
 			}
 			else
 			{
 				m_pPlayer->setAnimationState(PLAYER_IDLE_LEFT);
+				m_pPlayer->stop();
 			}
 		}
 	}
@@ -243,11 +249,11 @@ void PlayScene::GUI_Function()
 
 		}
 	}
-	if (ImGui::SliderFloat("Player's velocity", &playerVel, 1.0f, 10.f))
-	{
+	//if (ImGui::SliderFloat("Player's velocity", &playerVel, 1.0f, 10.f))
+	//{
 
-		m_pPlayer->getRigidBody()->velocity.x = playerVel;
-	}
+	//	m_pPlayer->getRigidBody()->velocity.x = playerVel;
+	//}
 	if (ImGui::SliderInt("Bullet pool", &poolSize, 1.0f, 20.0f))
 	{
 		

@@ -75,14 +75,25 @@ void SecondScene::handleEvents()
 	// handle player movement if no Game Controllers found
 	if (SDL_NumJoysticks() < 1)
 	{
+		if ((EventManager::Instance().getMouseButton(0)) && !movement)
+			initialPos = EventManager::Instance().getMousePosition();;
 		if (EventManager::Instance().getMouseButton(0))
 		{
+			lastPos = EventManager::Instance().getMousePosition();
+			m_pBrick->setDir(lastPos - initialPos);
 			m_pBrick->getTransform()->position = EventManager::Instance().getMousePosition();
-			
+			movement = true;
 		}
 		
-	}
+		else
+		{
+			m_pBrick->stop();
+			movement = false;
+		}
 
+
+	}
+	
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_ESCAPE))
 	{
@@ -104,6 +115,7 @@ void SecondScene::handleEvents()
 
 void SecondScene::start()
 {
+	SoundManager::Instance().playMusic("scene2", -1);
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 

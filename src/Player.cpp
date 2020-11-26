@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "TextureManager.h"
+#include "Util.h"
+
 
 Player::Player(): m_currentAnimationState(PLAYER_IDLE_RIGHT)
 {
@@ -17,11 +19,12 @@ Player::Player(): m_currentAnimationState(PLAYER_IDLE_RIGHT)
 	setHeight(58);
 
 	getTransform()->position = glm::vec2(380.0f, 540.0f);
-	getRigidBody()->velocity = glm::vec2(2.5f, 0.0f);
-	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->velocity = glm::vec2(1.0f, 0.0f);
+	getRigidBody()->acceleration = glm::vec2(1.0f, 0.0f);
 	getRigidBody()->isColliding = false;
+	m_pDirection = glm::vec2(0.0f,0.0f);
 	setType(PLAYER);
-
+	
 	m_buildAnimations();
 }
 
@@ -61,6 +64,26 @@ void Player::draw()
 
 void Player::update()
 {
+	const float deltaTIme = 1.0f / 60.0f;
+	float dirMagnitude = Util::magnitude(m_pDirection); 
+	if (dirMagnitude > 0)
+	{
+		
+		getRigidBody()->acceleration = Util::normalize(m_pDirection) * ACCELERATION;
+	}
+	else if (Util::magnitude(getRigidBody()->velocity) > 10)
+	{
+		getRigidBody()->acceleration = Util::normalize(getRigidBody()->velocity) * -ACCELERATION;
+	}
+	else
+	{
+		getRigidBody()->acceleration = glm::vec2(-getRigidBody()->velocity.x, -getRigidBody()->velocity.y);
+	}
+
+	getRigidBody()->velocity += getRigidBody()->acceleration;
+	glm::vec2 pos = getTransform()->position;
+	pos.x += getRigidBody()->velocity.x * deltaTIme;
+	getTransform()->position = pos;
 }
 
 void Player::clean()
@@ -69,17 +92,23 @@ void Player::clean()
 
 void Player::moveLeft()
 {
-	getTransform()->position -= getRigidBody()->velocity;
+	
+	m_pDirection.x = -1;
 }
 
 void Player::moveRight()
 {
-	getTransform()->position += getRigidBody()->velocity;
+	m_pDirection.x = 1;
 }
 
 void Player::setAnimationState(const PlayerAnimationState new_state)
 {
 	m_currentAnimationState = new_state;
+}
+
+void Player::stop()
+{
+	m_pDirection.x =0;
 }
 
 void Player::m_buildAnimations()

@@ -26,11 +26,11 @@ private:
 	std::string m_guiTitle;
 
 	glm::vec2 m_mousePosition;
-
+	glm::vec2 initialPos, lastPos;
 	Bullet* m_pBulletSprite;
 	Brick* m_pBrick;
 	bool m_playerFacingRight;
-
+	bool movement = false;
 	// UI Items
 	Button* m_pBackButton;
 	Button* m_pNextButton;
