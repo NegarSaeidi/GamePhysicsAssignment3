@@ -1,5 +1,6 @@
 #include "Ball.h"
 #include "TextureManager.h"
+#include "CollisionManager.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -41,20 +42,37 @@ void Ball::draw()
 
 void Ball::update()
 {
-	m_move();
-	m_checkBounds();
+	if (Util::magnitude(getRigidBody()->velocity) < 20.0f)
+		getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+	else {
+		m_move();
+		m_checkBounds();
+	}
 }
 
 void Ball::clean()
 {
 }
 
+void Ball::checkCollision(DisplayObject* tmpBrick)
+{
+	int x = getTransform()->position.x;
+	int y = getTransform()->position.y;
+	if (CollisionManager::circleAABBCheck(this, tmpBrick))
+	{
+		getRigidBody()->velocity = ((getRigidBody()->mass - tmpBrick->getRigidBody()->mass) * getRigidBody()->velocity /
+			(getRigidBody()->mass + tmpBrick->getRigidBody()->mass)) + (
+				2 * tmpBrick->getRigidBody()->mass * tmpBrick->getRigidBody()->velocity / (getRigidBody()->mass + tmpBrick->getRigidBody()->mass));
+		
+		tmpBrick->getRigidBody()->velocity = ((getRigidBody()->mass - tmpBrick->getRigidBody()->mass) * tmpBrick->getRigidBody()->velocity /
+			(getRigidBody()->mass + tmpBrick->getRigidBody()->mass)) + (
+				2 * getRigidBody()->mass * getRigidBody()->velocity / (getRigidBody()->mass + tmpBrick->getRigidBody()->mass));
+	}
+}
+
 void Ball::m_move()
 {
-	float deltaTime = 1.0 / 60.0f;
-	if (Util::magnitude(getRigidBody()->velocity) < 10.0f)
-		getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
-	else
+	float deltaTime = 1.0 / 60.0f; 
 	getTransform()->position += getRigidBody()->velocity * deltaTime;
 }
 

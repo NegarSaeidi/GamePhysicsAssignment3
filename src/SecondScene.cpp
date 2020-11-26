@@ -30,6 +30,7 @@ void SecondScene::draw()
 
 void SecondScene::update()
 {
+	m_pBall->checkCollision(m_pBrick);
 	updateDisplayList();
 }
 

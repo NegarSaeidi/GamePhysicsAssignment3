@@ -14,6 +14,7 @@ public:
 	virtual void draw() override;
 	virtual void update() override;
 	virtual void clean() override;
+	void checkCollision(DisplayObject* tmpBrick);
 
 private:
 	void m_move();

@@ -11,9 +11,10 @@ Brick::Brick()
 	setWidth(size.x);
 	setHeight(size.y);
 	getTransform()->position = glm::vec2(280.0f, 540.0f);
-	getRigidBody()->velocity = glm::vec2(0, 0);
+	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->acceleration = glm::vec2(0, 0);
 	getRigidBody()->isColliding = false;
+	getRigidBody()->mass = 12.0f;
 	m_pDirection = glm::vec2(0.0f, 0.0f);
 	setType(TARGET);
 }
