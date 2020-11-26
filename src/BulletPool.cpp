@@ -1,7 +1,9 @@
 #include "BulletPool.h"
+#include <iostream>
 
 BulletPool::BulletPool(int size)
 {
+	this->size = size;
 	for (int i = 0; i < size; i++)
 	{
 		inactive.push_back(new Bullet());
@@ -22,6 +24,7 @@ Bullet* BulletPool::BulletSpawn()
 		newBullet->active = true;
 		inactive.pop_back();
 		active.push_back(newBullet);
+		std::cout << "spawn\n";
 
 	}
 	return newBullet;
@@ -29,6 +32,7 @@ Bullet* BulletPool::BulletSpawn()
 
 void BulletPool::BulletDespawn(Bullet* bullet,float velY,float accY)
 {
+	std::cout << "despawn\n";
 	bullet->reset(velY,accY);
 	inactive.push_back(bullet);
 	for (std::vector<Bullet*>::iterator myiter = active.begin(); myiter != active.end(); myiter++)

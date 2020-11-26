@@ -10,6 +10,7 @@ public:
 	Bullet* BulletSpawn();
 	void BulletDespawn(Bullet*,float,float);
 	std::vector<Bullet*> active;
+	int getSize() { return size; }
 private:
 	Bullet* m_pBullets;
 	int size;

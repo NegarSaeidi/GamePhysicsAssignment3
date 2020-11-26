@@ -7,6 +7,7 @@
 StartScene::StartScene()
 {
 	TextureManager::Instance()->load("../Assets/textures/background.png", "background");
+	
 	StartScene::start();
 }
 
@@ -47,6 +48,7 @@ void StartScene::handleEvents()
 
 void StartScene::start()
 {
+	
 	const SDL_Color black = { 0, 0, 0, 255 };
 	m_pNameLabel[0] = new Label("Negar Saeidi", "Consolas", 12, black, glm::vec2(50.0f, 10.0f));
 	m_pNameLabel[0]->setParent(this);

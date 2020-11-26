@@ -40,7 +40,7 @@ private:
 	float bulletSpawnTimerStart;
 	Player* m_pPlayer;
 	bool m_playerFacingRight;
-
+	int poolSize;
 	// UI Items
 	Button* m_pBackButton;
 	Button* m_pNextButton;

@@ -282,5 +282,11 @@
     <Media Include="..\Assets\audio\boom.wav">
       <Filter>audio</Filter>
     </Media>
+    <Media Include="..\Assets\audio\Menu.wav">
+      <Filter>audio</Filter>
+    </Media>
+    <Media Include="..\Assets\audio\scene1.mp3">
+      <Filter>audio</Filter>
+    </Media>
   </ItemGroup>
 </Project>

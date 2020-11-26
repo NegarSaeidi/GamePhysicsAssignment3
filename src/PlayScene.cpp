@@ -12,6 +12,7 @@ PlayScene::PlayScene()
 	TextureManager::Instance()->load("../Assets/textures/scene1.png", "background");
 	BulletsVelocity = 100.0f;
 	Bulletsacceleration = 9.8f;
+	poolSize = 10;
 	PlayScene::start();
 }
 
@@ -139,16 +140,21 @@ void PlayScene::handleEvents()
 	{
 		TheGame::Instance()->changeSceneState(END_SCENE);
 	}
+	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_M))
+	{
+		
+	}
 }
 
 void PlayScene::start()
 {
 	// Set GUI Title
-
+	SoundManager::Instance().playMusic("scene1", -1);
 	m_guiTitle = "Play Scene";
 	
 	 //Bullet Sprite
-	m_pPool = new BulletPool(10);
+	m_pPool = new BulletPool(poolSize);
+
 	bulletSpawnTimerStart = SDL_GetTicks();
 	// Player Sprite
 	m_pPlayer = new Player();
@@ -241,6 +247,14 @@ void PlayScene::GUI_Function()
 	{
 
 		m_pPlayer->getRigidBody()->velocity.x = playerVel;
+	}
+	if (ImGui::SliderInt("Bullet pool", &poolSize, 1.0f, 20.0f))
+	{
+		
+		m_pPool = nullptr;
+		poolSize++;
+		m_pPool = new BulletPool(poolSize);
+		std::cout << "Size " << m_pPool->getSize() << std::endl;
 	}
 	ImGui::End();
 

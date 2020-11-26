@@ -242,6 +242,8 @@
   </ItemGroup>
   <ItemGroup>
     <Media Include="..\Assets\audio\boom.wav" />
+    <Media Include="..\Assets\audio\Menu.wav" />
+    <Media Include="..\Assets\audio\scene1.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
