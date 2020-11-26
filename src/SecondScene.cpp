@@ -123,10 +123,15 @@ void SecondScene::start()
 	/*m_pBulletSprite = new Bullet();
 	addChild(m_pBulletSprite);*/
 
-	// Player Sprite
+	// Brick Sprite
 	m_pBrick = new Brick();
 	addChild(m_pBrick);
 	m_playerFacingRight = true;
+
+
+	//ball Sprite
+	m_pBall = new Ball();
+	addChild(m_pBall);
 
 	// Back Button
 	//m_pBackButton = new Button("../Assets/textures/backButton.png", "backButton", BACK_BUTTON);

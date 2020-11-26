@@ -7,6 +7,7 @@
 #include "Brick.h"
 #include "Button.h"
 #include "Label.h"
+#include "Ball.h"
 
 class SecondScene : public Scene
 {
@@ -28,6 +29,7 @@ private:
 	glm::vec2 m_mousePosition;
 	glm::vec2 initialPos, lastPos;
 	Bullet* m_pBulletSprite;
+	Ball* m_pBall;
 	Brick* m_pBrick;
 	bool m_playerFacingRight;
 	bool movement = false;

@@ -34,6 +34,7 @@ public:
 	bool loadSpriteSheet(const std::string& data_file_name, const std::string& texture_file_name, const std::string& sprite_sheet_name);
 	
 	// drawing functions
+	void drawShape(const std::string& id, int x, int y, int width, int height, double angle = 0, int alpha = 255, bool centered = false, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	void draw(const std::string& id, int x, int y, double angle = 0, int alpha = 255, bool centered = false, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	void drawFrame(const std::string& id, int x, int y, int frame_width, int frame_height, 
 		int &current_row, int &current_frame, int frame_number, int row_number, float speed_factor,
