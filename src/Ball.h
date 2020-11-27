@@ -5,6 +5,7 @@
 #include "DisplayObject.h"
 #include "Util.h"
 #include "BallShape.h"
+#include <vector>
 class Ball final : public DisplayObject {
 public:
 	Ball();
@@ -25,6 +26,7 @@ private:
 	float loss;
 	float friction;
 	float radius;
+	std::vector<glm::vec2> points;
 };
 
 

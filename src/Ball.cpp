@@ -72,6 +72,16 @@ void Ball::checkCollision(DisplayObject* tmpBrick)
 	}
 }
 
+void Ball::createPolygon(int n)
+{
+	float angle = 360.0f / n;
+	for (int i = 0; i < n; i++)
+	{
+		points.push_back(glm::vec2(radius * cos(Util::Deg2Rad * (angle * i)),
+			(radius * sin(Util::Deg2Rad * (angle * i)))));
+	}
+}
+
 void Ball::m_move()
 {
 	float deltaTime = 1.0 / 60.0f; 
