@@ -28,6 +28,7 @@ Ball::Ball()
 	numberOfvertices = 3;
 	createPolygon(3);
 	setType(TARGET);
+	ballshape = BallShape::CIRCLE;
 }
 
 Ball::~Ball()
@@ -40,8 +41,10 @@ void Ball::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the target
+	if(ballshape==0)
 	TextureManager::Instance()->drawShape("ball", x, y, getWidth(), getHeight(), 0, 255, true);
-	//DrawPolygon();
+	else
+	DrawPolygon();
 }
 
 void Ball::update()
@@ -124,7 +127,7 @@ void Ball::m_move()
 	float deltaTime = 1.0 / 60.0f; 
 	// getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
 	getRigidBody()->velocity *= 0.99901;
-	//movePolygon(deltaTime);
+	movePolygon(deltaTime);
 	getTransform()->position += getRigidBody()->velocity * deltaTime;
 }
 

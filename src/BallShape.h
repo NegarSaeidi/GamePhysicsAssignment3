@@ -4,9 +4,8 @@
 
 enum BallShape
 {
-	BALL,
-	RECTANGLE,
-	POLYGAN,
+	CIRCLE,
+	POLYGON,
 };
 
 #endif /* defined(__BALL_SHAPE__) */
