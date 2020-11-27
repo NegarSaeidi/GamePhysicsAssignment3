@@ -23,7 +23,7 @@ Ball::Ball()
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->isColliding = false;
 	loss = -0.8f;
-	friction = 0.95f;
+	friction = -0.05f;
 	radius = getHeight() / 2.0f;
 	setType(TARGET);
 }
@@ -43,12 +43,13 @@ void Ball::draw()
 
 void Ball::update()
 {
-	if (Util::magnitude(getRigidBody()->velocity) < 20.0f)
+	if (Util::magnitude(getRigidBody()->velocity) < 10.0f)
 		getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	else {
 		m_move();
 		m_checkBounds();
 	}
+	std::cout << getRigidBody()->velocity.x << "  " << getRigidBody()->velocity.y<< std::endl;
 }
 
 void Ball::clean()
@@ -74,7 +75,10 @@ void Ball::checkCollision(DisplayObject* tmpBrick)
 void Ball::m_move()
 {
 	float deltaTime = 1.0 / 60.0f; 
-	getTransform()->position += getRigidBody()->velocity * deltaTime * friction;
+	// getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
+	getRigidBody()->velocity *= 0.99901;
+
+	getTransform()->position += getRigidBody()->velocity * deltaTime;
 }
 
 void Ball::m_checkBounds()

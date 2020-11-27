@@ -116,7 +116,7 @@ void SecondScene::handleEvents()
 
 void SecondScene::start()
 {
-	SoundManager::Instance().playMusic("scene2", -1);
+	//SoundManager::Instance().playMusic("scene2", -1);
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 
