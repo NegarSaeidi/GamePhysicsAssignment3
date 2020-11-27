@@ -41,6 +41,8 @@ private:
 	bool circleChecked;
 	float ballMass;
 	float brickMass;
+	Label* onScreenLabels[3];
+
 };
 
 #endif /* defined (__SECOND_SCENE__) */

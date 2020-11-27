@@ -7,7 +7,7 @@
 #include "imgui_sdl.h"
 #include "Renderer.h"
 
-SecondScene::SecondScene():activateScene(0), vertices(3), circleChecked(0), ballMass(),brickMass()
+SecondScene::SecondScene():activateScene(0), vertices(3), circleChecked(0), ballMass(8.0f),brickMass(12.0f)
 {
 	TextureManager::Instance()->load("../Assets/textures/scene2bg.png", "background");
 	SecondScene::start();
@@ -23,6 +23,8 @@ void SecondScene::draw()
 	{
 		GUI_Function();
 	}
+	onScreenLabels[1]->setText("Ball's velocity: " + std::to_string(Util::magnitude(m_pBall->getRigidBody()->velocity)));
+	onScreenLabels[2]->setText("Brick's velocity: " + std::to_string(Util::magnitude(m_pBrick->getRigidBody()->velocity)));
 
 	drawDisplayList();
 	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);
@@ -89,6 +91,19 @@ void SecondScene::start()
 	/*m_pBulletSprite = new Bullet();
 	addChild(m_pBulletSprite);*/
 
+	const SDL_Color black = { 0, 0, 0, 255 };
+	onScreenLabels[0] = new Label("Press P to pause the scene and change ImGui", "Consolas", 12, black, glm::vec2(600.0f, 80.0f));
+	onScreenLabels[0]->setParent(this);
+	addChild(onScreenLabels[0]);
+
+	onScreenLabels[1] = new Label("Ball's velocity: ", "Consolas", 12, black, glm::vec2(645.0f, 95.0f));
+	onScreenLabels[1]->setParent(this);
+	addChild(onScreenLabels[1]);
+
+	onScreenLabels[2] = new Label("Brick's velocity: ", "Consolas", 12, black, glm::vec2(650.0f, 105.0f));
+	onScreenLabels[2]->setParent(this);
+	addChild(onScreenLabels[2]);
+
 	// Brick Sprite
 	m_pBrick = new Brick();
 	addChild(m_pBrick);
@@ -119,32 +134,6 @@ void SecondScene::start()
 	});
 	addChild(m_pBackButton);
 
-	//// Next Button
-	//m_pNextButton = new Button("../Assets/textures/nextButton.png", "nextButton", NEXT_BUTTON);
-	//m_pNextButton->getTransform()->position = glm::vec2(500.0f, 400.0f);
-	//m_pNextButton->addEventListener(CLICK, [&]()-> void
-	//	{
-	//		m_pNextButton->setActive(false);
-	//		TheGame::Instance()->changeSceneState(END_SCENE);
-	//	});
-
-	//m_pNextButton->addEventListener(MOUSE_OVER, [&]()->void
-	//	{
-	//		m_pNextButton->setAlpha(128);
-	//	});
-
-	//m_pNextButton->addEventListener(MOUSE_OUT, [&]()->void
-	//	{
-	//		m_pNextButton->setAlpha(255);
-	//	});
-
-	//addChild(m_pNextButton);
-
-	///* Instructions Label */
-	//m_pInstructionsLabel = new Label("Press the backtick (`) character to toggle Debug View", "Consolas");
-	//m_pInstructionsLabel->getTransform()->position = glm::vec2(Config::SCREEN_WIDTH * 0.5f, 500.0f);
-
-	//addChild(m_pInstructionsLabel);
 }
 
 void SecondScene::GUI_Function()
@@ -182,7 +171,21 @@ void SecondScene::GUI_Function()
 			m_pBall->setBallShape(POLYGON);
 		}
 	}
-
+	ImGui::Separator();
+	if (ImGui::SliderFloat("Ball mass", &ballMass, 2.0f, 20.0f))
+	{
+		if (!activateScene)
+		{
+			m_pBall->getRigidBody()->mass = ballMass;
+		}
+	}
+	if (ImGui::SliderFloat("Brick mass", &brickMass, 2.0f, 20.0f))
+	{
+		if (!activateScene)
+		{
+			m_pBrick->getRigidBody()->mass = brickMass;
+		}
+	}
 
 	ImGui::End();
 
