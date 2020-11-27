@@ -25,6 +25,8 @@ Ball::Ball()
 	loss = -0.8f;
 	friction = -0.05f;
 	radius = getHeight() / 2.0f;
+	numberOfvertices = 3;
+	createPolygon(3);
 	setType(TARGET);
 }
 
@@ -39,10 +41,12 @@ void Ball::draw()
 
 	// draw the target
 	TextureManager::Instance()->drawShape("ball", x, y, getWidth(), getHeight(), 0, 255, true);
+	//DrawPolygon();
 }
 
 void Ball::update()
 {
+
 	if (Util::magnitude(getRigidBody()->velocity) < 10.0f)
 		getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	else {
@@ -60,7 +64,7 @@ void Ball::checkCollision(DisplayObject* tmpBrick)
 {
 	int x = getTransform()->position.x;
 	int y = getTransform()->position.y;
-	if (CollisionManager::circleAABBCheck(this, tmpBrick))
+	if (CollisionManager::circleAABBCheck(this, tmpBrick) || checkPolygonCollision(tmpBrick))
 	{
 		getRigidBody()->velocity = ((getRigidBody()->mass - tmpBrick->getRigidBody()->mass) * getRigidBody()->velocity /
 			(getRigidBody()->mass + tmpBrick->getRigidBody()->mass)) + (
@@ -74,11 +78,44 @@ void Ball::checkCollision(DisplayObject* tmpBrick)
 
 void Ball::createPolygon(int n)
 {
-	float angle = 360.0f / n;
-	for (int i = 0; i < n; i++)
+	points.clear();
+		numberOfvertices = n;
+		float angle = 360.0f / n;
+		for (int i = 0; i < n; i++)
+		{
+			points.push_back(glm::vec2(getTransform()->position.x+ radius * cos(Util::Deg2Rad * (angle * i)),
+				(getTransform()->position.y + radius * sin(Util::Deg2Rad * (angle * i)))));
+		}
+
+	
+}
+
+bool Ball::checkPolygonCollision(GameObject* tmpbrick)
+{
+	int i;
+	for (i = 0; i<points.size()-1; i++)
 	{
-		points.push_back(glm::vec2(radius * cos(Util::Deg2Rad * (angle * i)),
-			(radius * sin(Util::Deg2Rad * (angle * i)))));
+		CollisionManager::lineRectCheck(points[i], points[i + 1],tmpbrick->getTransform()->position, tmpbrick->getWidth(), tmpbrick->getHeight());
+	}
+	CollisionManager::lineRectCheck(points[i], points[0], tmpbrick->getTransform()->position, tmpbrick->getWidth(), tmpbrick->getHeight());
+	return false;
+}
+
+void Ball::DrawPolygon()
+{
+	int i;
+	for (i = 0; i < points.size() - 1; i++)
+	{
+		Util::DrawLine(points[i], points[i + 1], glm::vec4(230.0f / 255.0f, 92.0f / 255.0f, 0.0f/255.0f,255.0f/255.0f));
+	}
+	Util::DrawLine(points[i], points[0], glm::vec4(230.0f / 255.0f, 92.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f));
+}
+
+void Ball::movePolygon(float deltaTime)
+{
+	for (int i = 0; i < points.size(); i++)
+	{
+		points[i]  += getRigidBody()->velocity * deltaTime;
 	}
 }
 
@@ -87,7 +124,7 @@ void Ball::m_move()
 	float deltaTime = 1.0 / 60.0f; 
 	// getRigidBody()->velocity += getRigidBody()->acceleration * deltaTime;
 	getRigidBody()->velocity *= 0.99901;
-
+	//movePolygon(deltaTime);
 	getTransform()->position += getRigidBody()->velocity * deltaTime;
 }
 

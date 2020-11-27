@@ -16,6 +16,10 @@ public:
 	virtual void update() override;
 	virtual void clean() override;
 	void checkCollision(DisplayObject* tmpBrick);
+	void createPolygon(int n);
+	bool checkPolygonCollision(GameObject* tmpbrick);
+	void DrawPolygon();
+	void movePolygon(float deltaTime);
 
 private:
 	void m_move();
@@ -26,6 +30,7 @@ private:
 	float loss;
 	float friction;
 	float radius;
+	int numberOfvertices;
 	std::vector<glm::vec2> points;
 };
 
