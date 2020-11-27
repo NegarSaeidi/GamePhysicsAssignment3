@@ -31,6 +31,14 @@ void SecondScene::draw()
 void SecondScene::update()
 {
 	m_pBall->checkCollision(m_pBrick);
+	lastPos = EventManager::Instance().getMousePosition();
+	glm::vec2 direction = (lastPos - m_pBrick->getTransform()->position);
+	m_pBrick->getRigidBody()->velocity = direction * 1.25f;
+	if (abs(Util::magnitude(m_pBrick->getTransform()->position - EventManager::Instance().getMousePosition()) < 10))
+	{
+		m_pBrick->setDir(glm::vec2(0.0f, 0.0f));
+		m_pBrick->getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+	}
 	updateDisplayList();
 }
 

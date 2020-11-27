@@ -64,15 +64,18 @@ void Brick::m_move()
 		std::cout << "moving\n";
 		getRigidBody()->acceleration = Util::normalize(m_pDirection) * ACCELERATION;
 	}
-	else if (Util::magnitude(getRigidBody()->velocity) > 10)
+	else if (Util::magnitude(getRigidBody()->velocity) > 0)
 	{
 		std::cout << "slowing\n";
 		getRigidBody()->acceleration = Util::normalize(getRigidBody()->velocity) * -ACCELERATION;
-	}
-	else
-	{
-		std::cout << "ending\n";
-		getRigidBody()->acceleration = glm::vec2(-getRigidBody()->velocity.x, -getRigidBody()->velocity.y);
+		if (Util::magnitude(getRigidBody()->velocity) < ACCELERATION)
+		{
+			std::cout << "ending\n";
+			getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
+			getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+
+			//getRigidBody()->acceleration = glm::vec2(-getRigidBody()->velocity.x, -getRigidBody()->velocity.y);
+		}
 	}
 
 	getRigidBody()->velocity += getRigidBody()->acceleration;
