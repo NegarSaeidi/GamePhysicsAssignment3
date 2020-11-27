@@ -23,6 +23,7 @@ private:
 	
 	BallShape ballshape;
 	float loss;
+	float friction;
 	float radius;
 };
 

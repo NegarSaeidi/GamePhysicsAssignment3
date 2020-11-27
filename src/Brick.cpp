@@ -48,8 +48,6 @@ void Brick::setDir(glm::vec2 dir)
 	
 }
 
-
-
 void Brick::stop()
 {
 	m_pDirection = glm::vec2(0, 0);

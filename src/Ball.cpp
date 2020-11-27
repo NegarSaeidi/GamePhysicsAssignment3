@@ -23,6 +23,7 @@ Ball::Ball()
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->isColliding = false;
 	loss = -0.8f;
+	friction = 0.95f;
 	radius = getHeight() / 2.0f;
 	setType(TARGET);
 }
@@ -73,7 +74,7 @@ void Ball::checkCollision(DisplayObject* tmpBrick)
 void Ball::m_move()
 {
 	float deltaTime = 1.0 / 60.0f; 
-	getTransform()->position += getRigidBody()->velocity * deltaTime;
+	getTransform()->position += getRigidBody()->velocity * deltaTime * friction;
 }
 
 void Ball::m_checkBounds()

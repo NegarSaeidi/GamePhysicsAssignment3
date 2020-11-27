@@ -7,7 +7,8 @@
 StartScene::StartScene()
 {
 	TextureManager::Instance()->load("../Assets/textures/background.png", "background");
-	
+	SoundManager::Instance().playMusic("menu", -1);
+
 	StartScene::start();
 }
 
