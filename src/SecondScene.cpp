@@ -7,7 +7,7 @@
 #include "imgui_sdl.h"
 #include "Renderer.h"
 
-SecondScene::SecondScene():activateScene(0)
+SecondScene::SecondScene():activateScene(0), vertices(3), circleChecked(0), ballMass(),brickMass()
 {
 	TextureManager::Instance()->load("../Assets/textures/scene2bg.png", "background");
 	SecondScene::start();
@@ -164,14 +164,25 @@ void SecondScene::GUI_Function()
 
 	ImGui::Separator();
 
-	static float float3[3] = { 0.0f, 1.0f, 1.5f };
-	if (ImGui::SliderFloat3("My Slider", float3, 0.0f, 2.0f))
+	if (ImGui::SliderInt("Polygon number of vertices ", &vertices, 3, 8))
 	{
-		std::cout << float3[0] << std::endl;
-		std::cout << float3[1] << std::endl;
-		std::cout << float3[2] << std::endl;
-		std::cout << "---------------------------\n";
+		if (!activateScene && !circleChecked)
+		{
+			m_pBall->setNumOfVertices(vertices);
+		}
 	}
+	if (ImGui::Checkbox("Circle", &circleChecked));
+	{
+		if (!activateScene && circleChecked)
+		{
+			m_pBall->setBallShape(CIRCLE);
+		}
+		if (!circleChecked && !activateScene)
+		{
+			m_pBall->setBallShape(POLYGON);
+		}
+	}
+
 
 	ImGui::End();
 

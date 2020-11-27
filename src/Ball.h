@@ -20,6 +20,9 @@ public:
 	bool checkPolygonCollision(GameObject* tmpbrick);
 	void DrawPolygon();
 	void movePolygon(float deltaTime);
+	int getNumOfVertices();
+	void setNumOfVertices(int num);
+	void setBallShape(BallShape bs);
 
 private:
 	void m_move();

@@ -25,7 +25,7 @@ private:
 	// IMGUI Function
 	void GUI_Function();
 	std::string m_guiTitle;
-
+	int vertices;
 	glm::vec2 m_mousePosition;
 	glm::vec2 initialPos, lastPos;
 	Bullet* m_pBulletSprite;
@@ -38,6 +38,9 @@ private:
 	Button* m_pNextButton;
 	Label* m_pInstructionsLabel;
 	bool activateScene;
+	bool circleChecked;
+	float ballMass;
+	float brickMass;
 };
 
 #endif /* defined (__SECOND_SCENE__) */

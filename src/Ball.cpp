@@ -25,10 +25,11 @@ Ball::Ball()
 	loss = -0.8f;
 	friction = -0.05f;
 	radius = getHeight() / 2.0f;
-	numberOfvertices = 4;
+	numberOfvertices = 3;
 	createPolygon(numberOfvertices);
 	setType(TARGET);
 	ballshape = BallShape::POLYGON;
+	getRigidBody()->mass=8.0f;
 }
 
 Ball::~Ball()
@@ -49,6 +50,7 @@ void Ball::draw()
 
 void Ball::update()
 {
+	createPolygon(numberOfvertices);
 
 	if (Util::magnitude(getRigidBody()->velocity) < 10.0f)
 		getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -120,6 +122,21 @@ void Ball::movePolygon(float deltaTime)
 	{
 		points[i]  += getRigidBody()->velocity * deltaTime;
 	}
+}
+
+int Ball::getNumOfVertices()
+{
+	return numberOfvertices;
+}
+
+void Ball::setNumOfVertices(int num)
+{
+	numberOfvertices = num;
+}
+
+void Ball::setBallShape(BallShape bs)
+{
+	ballshape = bs;
 }
 
 void Ball::m_move()
