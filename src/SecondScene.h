@@ -23,7 +23,7 @@ public:
 	virtual void start() override;
 private:
 	// IMGUI Function
-	void GUI_Function() const;
+	void GUI_Function();
 	std::string m_guiTitle;
 
 	glm::vec2 m_mousePosition;
@@ -37,6 +37,7 @@ private:
 	Button* m_pBackButton;
 	Button* m_pNextButton;
 	Label* m_pInstructionsLabel;
+	bool activateScene;
 };
 
 #endif /* defined (__SECOND_SCENE__) */

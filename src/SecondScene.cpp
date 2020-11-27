@@ -7,7 +7,7 @@
 #include "imgui_sdl.h"
 #include "Renderer.h"
 
-SecondScene::SecondScene()
+SecondScene::SecondScene():activateScene(0)
 {
 	TextureManager::Instance()->load("../Assets/textures/scene2bg.png", "background");
 	SecondScene::start();
@@ -30,16 +30,20 @@ void SecondScene::draw()
 
 void SecondScene::update()
 {
-	m_pBall->checkCollision(m_pBrick);
-	lastPos = EventManager::Instance().getMousePosition();
-	glm::vec2 direction = (lastPos - m_pBrick->getTransform()->position);
-	m_pBrick->getRigidBody()->velocity = direction * 1.25f;
-	if (abs(Util::magnitude(m_pBrick->getTransform()->position - EventManager::Instance().getMousePosition()) < 10))
+	if (activateScene)
 	{
-		m_pBrick->setDir(glm::vec2(0.0f, 0.0f));
-		m_pBrick->getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+		m_pBall->checkCollision(m_pBrick);
+		lastPos = EventManager::Instance().getMousePosition();
+		glm::vec2 direction = (lastPos - m_pBrick->getTransform()->position);
+		m_pBrick->getRigidBody()->velocity = direction * 1.25f;
+		if (abs(Util::magnitude(m_pBrick->getTransform()->position - EventManager::Instance().getMousePosition()) < 10))
+		{
+			m_pBrick->setDir(glm::vec2(0.0f, 0.0f));
+			m_pBrick->getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+		}
+		updateDisplayList();
 	}
-	updateDisplayList();
+	m_pBackButton->update();
 }
 
 void SecondScene::clean()
@@ -52,57 +56,10 @@ void SecondScene::handleEvents()
 
 	EventManager::Instance().update();
 
-	// handle player movement with GameController
-	if (SDL_NumJoysticks() > 0)
+	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_P))
 	{
-		if (EventManager::Instance().getGameController(0) != nullptr)
-		{
-			const auto deadZone = 10000;
-			if (EventManager::Instance().getGameController(0)->LEFT_STICK_X > deadZone)
-			{
-			}
-			else if (EventManager::Instance().getGameController(0)->LEFT_STICK_X < -deadZone)
-			{
-				
-				m_playerFacingRight = false;
-			}
-			else
-			{
-				if (m_playerFacingRight)
-				{
-					
-				}
-				else
-				{
-					
-				}
-			}
-		}
+		activateScene = false;
 	}
-
-
-	// handle player movement if no Game Controllers found
-	if (SDL_NumJoysticks() < 1)
-	{
-		if ((EventManager::Instance().getMouseButton(0)) && !movement)
-			initialPos = EventManager::Instance().getMousePosition();;
-		if (EventManager::Instance().getMouseButton(0))
-		{
-			lastPos = EventManager::Instance().getMousePosition();
-			m_pBrick->setDir(lastPos - initialPos);
-			m_pBrick->getTransform()->position = EventManager::Instance().getMousePosition();
-			movement = true;
-		}
-		
-		else
-		{
-			m_pBrick->stop();
-			movement = false;
-		}
-
-
-	}
-	
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_ESCAPE))
 	{
@@ -190,7 +147,7 @@ void SecondScene::start()
 	//addChild(m_pInstructionsLabel);
 }
 
-void SecondScene::GUI_Function() const
+void SecondScene::GUI_Function()
 {
 	// Always open with a NewFrame
 	ImGui::NewFrame();
@@ -198,11 +155,11 @@ void SecondScene::GUI_Function() const
 	// See examples by uncommenting the following - also look at imgui_demo.cpp in the IMGUI filter
 	//ImGui::ShowDemoWindow();
 
-	ImGui::Begin("Your Window Title Goes Here", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("Change the variables", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
 
-	if (ImGui::Button("My Button"))
+	if (ImGui::Button("Activate"))
 	{
-		std::cout << "My Button Pressed" << std::endl;
+		activateScene = true;
 	}
 
 	ImGui::Separator();
