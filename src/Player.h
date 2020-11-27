@@ -26,6 +26,8 @@ private:
 	void m_buildAnimations();
 	glm::vec2 m_pDirection;
 	PlayerAnimationState m_currentAnimationState;
+	void m_checkBounds();
+	float radius;
 };
 
 #endif /* defined (__PLAYER__) */
