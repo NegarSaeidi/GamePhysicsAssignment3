@@ -7,7 +7,9 @@
 #include "imgui_sdl.h"
 #include "Renderer.h"
 
-SecondScene::SecondScene()
+#define PPM 50
+
+SecondScene::SecondScene():activateScene(0), vertices(3), circleChecked(0), ballMass(8.0f),brickMass(12.0f)
 {
 	TextureManager::Instance()->load("../Assets/textures/scene2bg.png", "background");
 	SecondScene::start();
@@ -23,6 +25,8 @@ void SecondScene::draw()
 	{
 		GUI_Function();
 	}
+	onScreenLabels[1]->setText("Ball's velocity: " + std::to_string(Util::magnitude(m_pBall->getRigidBody()->velocity)/ PPM));
+	onScreenLabels[2]->setText("Brick's velocity: " + std::to_string(Util::magnitude(m_pBrick->getRigidBody()->velocity)/PPM));
 
 	drawDisplayList();
 	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);
@@ -30,7 +34,20 @@ void SecondScene::draw()
 
 void SecondScene::update()
 {
-	updateDisplayList();
+	if (activateScene)
+	{
+		m_pBall->checkCollision(m_pBrick);
+		lastPos = EventManager::Instance().getMousePosition();
+		glm::vec2 direction = (lastPos - m_pBrick->getTransform()->position);
+		m_pBrick->getRigidBody()->velocity = direction * 1.25f;
+		if (abs(Util::magnitude(m_pBrick->getTransform()->position - EventManager::Instance().getMousePosition()) < 10))
+		{
+			m_pBrick->setDir(glm::vec2(0.0f, 0.0f));
+			m_pBrick->getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+		}
+		updateDisplayList();
+	}
+	m_pBackButton->update();
 }
 
 void SecondScene::clean()
@@ -43,57 +60,10 @@ void SecondScene::handleEvents()
 
 	EventManager::Instance().update();
 
-	// handle player movement with GameController
-	if (SDL_NumJoysticks() > 0)
+	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_P))
 	{
-		if (EventManager::Instance().getGameController(0) != nullptr)
-		{
-			const auto deadZone = 10000;
-			if (EventManager::Instance().getGameController(0)->LEFT_STICK_X > deadZone)
-			{
-			}
-			else if (EventManager::Instance().getGameController(0)->LEFT_STICK_X < -deadZone)
-			{
-				
-				m_playerFacingRight = false;
-			}
-			else
-			{
-				if (m_playerFacingRight)
-				{
-					
-				}
-				else
-				{
-					
-				}
-			}
-		}
+		activateScene = false;
 	}
-
-
-	// handle player movement if no Game Controllers found
-	if (SDL_NumJoysticks() < 1)
-	{
-		if ((EventManager::Instance().getMouseButton(0)) && !movement)
-			initialPos = EventManager::Instance().getMousePosition();;
-		if (EventManager::Instance().getMouseButton(0))
-		{
-			lastPos = EventManager::Instance().getMousePosition();
-			m_pBrick->setDir(lastPos - initialPos);
-			m_pBrick->getTransform()->position = EventManager::Instance().getMousePosition();
-			movement = true;
-		}
-		
-		else
-		{
-			m_pBrick->stop();
-			movement = false;
-		}
-
-
-	}
-	
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_ESCAPE))
 	{
@@ -115,7 +85,7 @@ void SecondScene::handleEvents()
 
 void SecondScene::start()
 {
-	SoundManager::Instance().playMusic("scene2", -1);
+	//SoundManager::Instance().playMusic("scene2", -1);
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 
@@ -123,60 +93,52 @@ void SecondScene::start()
 	/*m_pBulletSprite = new Bullet();
 	addChild(m_pBulletSprite);*/
 
-	// Player Sprite
+	const SDL_Color black = { 0, 0, 0, 255 };
+	onScreenLabels[0] = new Label("Press P to pause the scene and change ImGui", "Consolas", 12, black, glm::vec2(600.0f, 80.0f));
+	onScreenLabels[0]->setParent(this);
+	addChild(onScreenLabels[0]);
+
+	onScreenLabels[1] = new Label("Ball's velocity: ", "Consolas", 12, black, glm::vec2(645.0f, 95.0f));
+	onScreenLabels[1]->setParent(this);
+	addChild(onScreenLabels[1]);
+
+	onScreenLabels[2] = new Label("Brick's velocity: ", "Consolas", 12, black, glm::vec2(650.0f, 105.0f));
+	onScreenLabels[2]->setParent(this);
+	addChild(onScreenLabels[2]);
+
+	// Brick Sprite
 	m_pBrick = new Brick();
 	addChild(m_pBrick);
 	m_playerFacingRight = true;
 
+
+	//ball Sprite
+	m_pBall = new Ball();
+	addChild(m_pBall);
+
 	// Back Button
-	//m_pBackButton = new Button("../Assets/textures/backButton.png", "backButton", BACK_BUTTON);
-	//m_pBackButton->getTransform()->position = glm::vec2(300.0f, 600.0f);
-	//m_pBackButton->addEventListener(CLICK, [&]()-> void
-	//	{
-	//		m_pBackButton->setActive(false);
-	//		TheGame::Instance()->changeSceneState(START_SCENE);
-	//	});
+	m_pBackButton = new Button("../Assets/textures/back.png", "back", BACK_BUTTON);
+	m_pBackButton->getTransform()->position = glm::vec2(700.0f, 50.0f);
+	m_pBackButton->addEventListener(CLICK, [&]()-> void
+	{
+		m_pBackButton->setActive(false);
+		TheGame::Instance()->changeSceneState(START_SCENE);
+	});
 
-	//m_pBackButton->addEventListener(MOUSE_OVER, [&]()->void
-	//	{
-	//		m_pBackButton->setAlpha(128);
-	//	});
+	m_pBackButton->addEventListener(MOUSE_OVER, [&]()->void
+	{
+		m_pBackButton->setAlpha(128);
+	});
 
-	//m_pBackButton->addEventListener(MOUSE_OUT, [&]()->void
-	//	{
-	//		m_pBackButton->setAlpha(255);
-	//	});
-	//addChild(m_pBackButton);
+	m_pBackButton->addEventListener(MOUSE_OUT, [&]()->void
+	{
+		m_pBackButton->setAlpha(255);
+	});
+	addChild(m_pBackButton);
 
-	//// Next Button
-	//m_pNextButton = new Button("../Assets/textures/nextButton.png", "nextButton", NEXT_BUTTON);
-	//m_pNextButton->getTransform()->position = glm::vec2(500.0f, 400.0f);
-	//m_pNextButton->addEventListener(CLICK, [&]()-> void
-	//	{
-	//		m_pNextButton->setActive(false);
-	//		TheGame::Instance()->changeSceneState(END_SCENE);
-	//	});
-
-	//m_pNextButton->addEventListener(MOUSE_OVER, [&]()->void
-	//	{
-	//		m_pNextButton->setAlpha(128);
-	//	});
-
-	//m_pNextButton->addEventListener(MOUSE_OUT, [&]()->void
-	//	{
-	//		m_pNextButton->setAlpha(255);
-	//	});
-
-	//addChild(m_pNextButton);
-
-	///* Instructions Label */
-	//m_pInstructionsLabel = new Label("Press the backtick (`) character to toggle Debug View", "Consolas");
-	//m_pInstructionsLabel->getTransform()->position = glm::vec2(Config::SCREEN_WIDTH * 0.5f, 500.0f);
-
-	//addChild(m_pInstructionsLabel);
 }
 
-void SecondScene::GUI_Function() const
+void SecondScene::GUI_Function()
 {
 	// Always open with a NewFrame
 	ImGui::NewFrame();
@@ -184,22 +146,47 @@ void SecondScene::GUI_Function() const
 	// See examples by uncommenting the following - also look at imgui_demo.cpp in the IMGUI filter
 	//ImGui::ShowDemoWindow();
 
-	ImGui::Begin("Your Window Title Goes Here", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("Change the variables", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
 
-	if (ImGui::Button("My Button"))
+	if (ImGui::Button("Activate"))
 	{
-		std::cout << "My Button Pressed" << std::endl;
+		activateScene = true;
 	}
 
 	ImGui::Separator();
 
-	static float float3[3] = { 0.0f, 1.0f, 1.5f };
-	if (ImGui::SliderFloat3("My Slider", float3, 0.0f, 2.0f))
+	if (ImGui::SliderInt("Polygon number of vertices ", &vertices, 3, 8))
 	{
-		std::cout << float3[0] << std::endl;
-		std::cout << float3[1] << std::endl;
-		std::cout << float3[2] << std::endl;
-		std::cout << "---------------------------\n";
+		if (!activateScene && !circleChecked)
+		{
+			m_pBall->setNumOfVertices(vertices);
+		}
+	}
+	if (ImGui::Checkbox("Circle", &circleChecked));
+	{
+		if (!activateScene && circleChecked)
+		{
+			m_pBall->setBallShape(CIRCLE);
+		}
+		if (!circleChecked && !activateScene)
+		{
+			m_pBall->setBallShape(POLYGON);
+		}
+	}
+	ImGui::Separator();
+	if (ImGui::SliderFloat("Ball mass", &ballMass, 2.0f, 20.0f))
+	{
+		if (!activateScene)
+		{
+			m_pBall->getRigidBody()->mass = ballMass;
+		}
+	}
+	if (ImGui::SliderFloat("Brick mass", &brickMass, 2.0f, 20.0f))
+	{
+		if (!activateScene)
+		{
+			m_pBrick->getRigidBody()->mass = brickMass;
+		}
 	}
 
 	ImGui::End();

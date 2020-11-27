@@ -7,6 +7,7 @@
 #include "Brick.h"
 #include "Button.h"
 #include "Label.h"
+#include "Ball.h"
 
 class SecondScene : public Scene
 {
@@ -22,12 +23,13 @@ public:
 	virtual void start() override;
 private:
 	// IMGUI Function
-	void GUI_Function() const;
+	void GUI_Function();
 	std::string m_guiTitle;
-
+	int vertices;
 	glm::vec2 m_mousePosition;
 	glm::vec2 initialPos, lastPos;
 	Bullet* m_pBulletSprite;
+	Ball* m_pBall;
 	Brick* m_pBrick;
 	bool m_playerFacingRight;
 	bool movement = false;
@@ -35,6 +37,12 @@ private:
 	Button* m_pBackButton;
 	Button* m_pNextButton;
 	Label* m_pInstructionsLabel;
+	bool activateScene;
+	bool circleChecked;
+	float ballMass;
+	float brickMass;
+	Label* onScreenLabels[3];
+
 };
 
 #endif /* defined (__SECOND_SCENE__) */

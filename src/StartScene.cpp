@@ -7,7 +7,8 @@
 StartScene::StartScene()
 {
 	TextureManager::Instance()->load("../Assets/textures/background.png", "background");
-	
+	SoundManager::Instance().playMusic("menu", -1);
+
 	StartScene::start();
 }
 
@@ -58,9 +59,9 @@ void StartScene::start()
 	m_pNameLabel[1]->setParent(this);
 	addChild(m_pNameLabel[1]);
 
-	m_pNameLabel[1] = new Label("Mehrara Sarabi", "Consolas", 12, black, glm::vec2(55.0f, 50.0f));
-	m_pNameLabel[1]->setParent(this);
-	addChild(m_pNameLabel[1]);
+	m_pNameLabel[2] = new Label("Mehrara Sarabi", "Consolas", 12, black, glm::vec2(55.0f, 50.0f));
+	m_pNameLabel[2]->setParent(this);
+	addChild(m_pNameLabel[2]);
 
 	m_pIDLabel[0] = new Label("101261396", "Consolas", 12, black, glm::vec2(150.0f, 10.0f));
 	m_pIDLabel[0]->setParent(this);
@@ -70,9 +71,9 @@ void StartScene::start()
 	m_pIDLabel[1]->setParent(this);
 	addChild(m_pIDLabel[1]);
 
-	m_pIDLabel[1] = new Label("101247463", "Consolas", 12, black, glm::vec2(150.0f, 50.0f));
-	m_pIDLabel[1]->setParent(this);
-	addChild(m_pIDLabel[1]);
+	m_pIDLabel[2] = new Label("101247463", "Consolas", 12, black, glm::vec2(150.0f, 50.0f));
+	m_pIDLabel[2]->setParent(this);
+	addChild(m_pIDLabel[2]);
 
 
 	// Start Button

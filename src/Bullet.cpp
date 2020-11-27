@@ -14,7 +14,7 @@ Bullet::Bullet()
 	setHeight(65);
 
 	getTransform()->position = glm::vec2(400.0f, 200.0f);
-	
+	getRigidBody()->acceleration = glm::vec2(0.0f, 9.8f);
 	setType(PLANE);
 	reset(100.0f,9.8f);
 	//m_buildAnimations();
@@ -54,7 +54,11 @@ void Bullet::move()
 	getTransform()->position = getTransform()->position+getRigidBody()->velocity*deltaTime;
 	
 }
+void Bullet::setVelocity(float velY)
+{
+	getRigidBody()->velocity = glm::vec2(0, velY);
 
+}
 void Bullet::reset(float velY,float accY)
 {
 	getRigidBody()->velocity = glm::vec2(0.0f, velY);

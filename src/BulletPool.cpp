@@ -14,7 +14,7 @@ BulletPool::~BulletPool()
 {
 }
 
-Bullet* BulletPool::BulletSpawn()
+Bullet* BulletPool::BulletSpawn(float vel)
 {
 	Bullet* newBullet = nullptr;
 	if (inactive.size()>0)
@@ -22,6 +22,7 @@ Bullet* BulletPool::BulletSpawn()
 		newBullet = &m_pBullets[index];
 		newBullet = inactive.back();
 		newBullet->active = true;
+		newBullet->setVelocity(vel);
 		inactive.pop_back();
 		active.push_back(newBullet);
 		std::cout << "spawn\n";

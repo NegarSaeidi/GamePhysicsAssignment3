@@ -16,6 +16,7 @@ public:
 	virtual void clean() override;
 	void move();
 	void reset(float velY, float accY);
+	void setVelocity(float velY);
 	bool active = false;
 private:
 	void m_buildAnimations();

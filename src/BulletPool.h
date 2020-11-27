@@ -7,7 +7,7 @@ class BulletPool
 public:
 	BulletPool(int);
 	~BulletPool();
-	Bullet* BulletSpawn();
+	Bullet* BulletSpawn(float vel);
 	void BulletDespawn(Bullet*,float,float);
 	std::vector<Bullet*> active;
 	int getSize() { return size; }

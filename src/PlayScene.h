@@ -36,7 +36,7 @@ private:
 	void spawnBullet();
 	glm::vec2 m_mousePosition;
 	BulletPool* m_pPool;
-	const float bulletSpawnTimeDuration=700.0f;
+	const float bulletSpawnTimeDuration=300.0f;
 	float bulletSpawnTimerStart;
 	Player* m_pPlayer;
 	bool m_playerFacingRight;
@@ -45,6 +45,7 @@ private:
 	Button* m_pBackButton;
 	Button* m_pNextButton;
 	Label* m_pInstructionsLabel;
+	Label* onScreenLabels[2];
 };
 
 #endif /* defined (__PLAY_SCENE__) */

@@ -24,7 +24,7 @@ Player::Player(): m_currentAnimationState(PLAYER_IDLE_RIGHT)
 	getRigidBody()->isColliding = false;
 	m_pDirection = glm::vec2(0.0f,0.0f);
 	setType(PLAYER);
-	
+	radius = getHeight() / 2.0f;
 	m_buildAnimations();
 }
 
@@ -64,6 +64,7 @@ void Player::draw()
 
 void Player::update()
 {
+	m_checkBounds();
 	const float deltaTIme = 1.0f / 60.0f;
 	float dirMagnitude = Util::magnitude(m_pDirection); 
 	if (dirMagnitude > 0)
@@ -132,4 +133,31 @@ void Player::m_buildAnimations()
 	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-3"));
 
 	setAnimation(runAnimation);
+}
+void Player::m_checkBounds()
+{
+	int width = 800;
+	int height = 600;
+	int x = getTransform()->position.x;
+	int y = getTransform()->position.y;
+	if (x - radius / 2 < 6)
+	{
+		getTransform()->position.x = 6.5 + radius / 2;
+		getRigidBody()->velocity = glm::vec2(0.0, 0.0);
+	}
+	if (y - radius / 2 < 6)
+	{
+		getTransform()->position.y = 6.5 + radius / 2;
+		getRigidBody()->velocity = glm::vec2(0.0, 0.0);
+	}
+	if (x + radius / 2 > 794)
+	{
+		getRigidBody()->velocity = glm::vec2(0.0,0.0);
+		getTransform()->position.x = 794.5 - radius / 2;
+	}
+	if (y + radius / 2 > 594)
+	{
+		getRigidBody()->velocity = glm::vec2(0.0, 0.0);
+		getTransform()->position.y = 594.5 - radius / 2;
+	}
 }

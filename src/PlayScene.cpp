@@ -6,12 +6,11 @@
 #include "imgui.h"
 #include "imgui_sdl.h"
 #include "Renderer.h"
-
+#define PPM 50
 PlayScene::PlayScene()
 {
 	TextureManager::Instance()->load("../Assets/textures/scene1.png", "background");
-	BulletsVelocity = 100.0f;
-	Bulletsacceleration = 9.8f;
+	
 	poolSize = 10;
 	PlayScene::start();
 }
@@ -26,7 +25,8 @@ void PlayScene::draw()
 	{
 		GUI_Function();
 	}
-
+	onScreenLabels[0]->setText("Player's velocity: " + std::to_string(Util::magnitude(m_pPlayer->getRigidBody()->velocity) / PPM));
+onScreenLabels[1]->setText("Player's acceleration: " + std::to_string(Util::magnitude(m_pPlayer->getRigidBody()->acceleration) / PPM));
 	drawDisplayList();
 	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);
 }
@@ -34,6 +34,7 @@ void PlayScene::draw()
 void PlayScene::update()
 {
 	updateDisplayList();
+
 	if (activateScene)
 	{
 	
@@ -54,6 +55,7 @@ void PlayScene::update()
 			}
 		}
 	}
+
 
 }
 
@@ -154,12 +156,23 @@ void PlayScene::handleEvents()
 
 void PlayScene::start()
 {
+	BulletsVelocity = 100.0f;
+	Bulletsacceleration = 9.8f;
 	// Set GUI Title
 	SoundManager::Instance().playMusic("scene1", -1);
 	m_guiTitle = "Play Scene";
 	
 	 //Bullet Sprite
 	m_pPool = new BulletPool(poolSize);
+
+	const SDL_Color black = { 0, 0, 0, 255 };
+	onScreenLabels[0] = new Label("Player's velocity: ", "Consolas", 12, black, glm::vec2(645.0f, 95.0f));
+	onScreenLabels[0]->setParent(this);
+	addChild(onScreenLabels[0]);
+
+	onScreenLabels[1] = new Label("Player's velocity: ", "Consolas", 12, black, glm::vec2(650.0f, 105.0f));
+	onScreenLabels[1]->setParent(this);
+	addChild(onScreenLabels[1]);
 
 	bulletSpawnTimerStart = SDL_GetTicks();
 	// Player Sprite
@@ -212,7 +225,7 @@ void PlayScene::collision()
 
 void PlayScene::spawnBullet()
 {
-	 bullet = m_pPool->BulletSpawn();
+	 bullet = m_pPool->BulletSpawn(BulletsVelocity);
 	if (bullet)
 	{
 		addChild(bullet);
@@ -254,11 +267,10 @@ void PlayScene::GUI_Function()
 
 	//	m_pPlayer->getRigidBody()->velocity.x = playerVel;
 	//}
-	if (ImGui::SliderInt("Bullet pool", &poolSize, 1.0f, 20.0f))
+	if (ImGui::SliderInt("Bullet pool", &poolSize, 1.0f, 40.0f))
 	{
 		
 		m_pPool = nullptr;
-		poolSize++;
 		m_pPool = new BulletPool(poolSize);
 		std::cout << "Size " << m_pPool->getSize() << std::endl;
 	}

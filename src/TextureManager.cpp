@@ -118,6 +118,38 @@ bool TextureManager::loadSpriteSheet(
 	return true;
 }
 
+void TextureManager::drawShape(const std::string& id, int x, int y, int width, int height, double angle, int alpha, bool centered, SDL_RendererFlip flip)
+{
+	SDL_Rect srcRect;
+	SDL_Rect destRect;
+
+	srcRect.x = 0;
+	srcRect.y = 0;
+
+	int textureWidth, textureHeight;
+
+	SDL_QueryTexture(m_textureMap[id].get(), nullptr, nullptr, &textureWidth, &textureHeight);
+
+	srcRect.w = textureWidth;
+	srcRect.h = textureHeight;
+	destRect.w = width;
+	destRect.h = height;
+
+	if (centered) {
+		const int xOffset = width * 0.5;
+		const int yOffset = height * 0.5;
+		destRect.x = x - xOffset;
+		destRect.y = y - yOffset;
+	}
+	else {
+		destRect.x = x;
+		destRect.y = y;
+	}
+	SDL_SetTextureAlphaMod(m_textureMap[id].get(), alpha);
+	SDL_RenderCopyEx(Renderer::Instance()->getRenderer(), m_textureMap[id].get(), &srcRect, &destRect, angle, nullptr, flip);
+
+}
+
 void TextureManager::draw(const std::string& id, const int x, const int y, const double angle, const int alpha, const bool centered, const SDL_RendererFlip flip)
 {
 	SDL_Rect srcRect;
