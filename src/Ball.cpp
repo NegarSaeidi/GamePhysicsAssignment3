@@ -25,10 +25,10 @@ Ball::Ball()
 	loss = -0.8f;
 	friction = -0.05f;
 	radius = getHeight() / 2.0f;
-	numberOfvertices = 3;
-	createPolygon(3);
+	numberOfvertices = 4;
+	createPolygon(numberOfvertices);
 	setType(TARGET);
-	ballshape = BallShape::CIRCLE;
+	ballshape = BallShape::POLYGON;
 }
 
 Ball::~Ball()
