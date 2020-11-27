@@ -7,6 +7,8 @@
 #include "imgui_sdl.h"
 #include "Renderer.h"
 
+#define PPM 50
+
 SecondScene::SecondScene():activateScene(0), vertices(3), circleChecked(0), ballMass(8.0f),brickMass(12.0f)
 {
 	TextureManager::Instance()->load("../Assets/textures/scene2bg.png", "background");
@@ -23,8 +25,8 @@ void SecondScene::draw()
 	{
 		GUI_Function();
 	}
-	onScreenLabels[1]->setText("Ball's velocity: " + std::to_string(Util::magnitude(m_pBall->getRigidBody()->velocity)));
-	onScreenLabels[2]->setText("Brick's velocity: " + std::to_string(Util::magnitude(m_pBrick->getRigidBody()->velocity)));
+	onScreenLabels[1]->setText("Ball's velocity: " + std::to_string(Util::magnitude(m_pBall->getRigidBody()->velocity)/ PPM));
+	onScreenLabels[2]->setText("Brick's velocity: " + std::to_string(Util::magnitude(m_pBrick->getRigidBody()->velocity)/PPM));
 
 	drawDisplayList();
 	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);

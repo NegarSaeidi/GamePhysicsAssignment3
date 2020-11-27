@@ -6,7 +6,7 @@
 #include "imgui.h"
 #include "imgui_sdl.h"
 #include "Renderer.h"
-
+#define PPM 50
 PlayScene::PlayScene()
 {
 	TextureManager::Instance()->load("../Assets/textures/scene1.png", "background");
