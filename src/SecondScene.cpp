@@ -135,24 +135,24 @@ void SecondScene::start()
 	addChild(m_pBall);
 
 	// Back Button
-	//m_pBackButton = new Button("../Assets/textures/backButton.png", "backButton", BACK_BUTTON);
-	//m_pBackButton->getTransform()->position = glm::vec2(300.0f, 600.0f);
-	//m_pBackButton->addEventListener(CLICK, [&]()-> void
-	//	{
-	//		m_pBackButton->setActive(false);
-	//		TheGame::Instance()->changeSceneState(START_SCENE);
-	//	});
+	m_pBackButton = new Button("../Assets/textures/back.png", "back", BACK_BUTTON);
+	m_pBackButton->getTransform()->position = glm::vec2(700.0f, 50.0f);
+	m_pBackButton->addEventListener(CLICK, [&]()-> void
+	{
+		m_pBackButton->setActive(false);
+		TheGame::Instance()->changeSceneState(START_SCENE);
+	});
 
-	//m_pBackButton->addEventListener(MOUSE_OVER, [&]()->void
-	//	{
-	//		m_pBackButton->setAlpha(128);
-	//	});
+	m_pBackButton->addEventListener(MOUSE_OVER, [&]()->void
+	{
+		m_pBackButton->setAlpha(128);
+	});
 
-	//m_pBackButton->addEventListener(MOUSE_OUT, [&]()->void
-	//	{
-	//		m_pBackButton->setAlpha(255);
-	//	});
-	//addChild(m_pBackButton);
+	m_pBackButton->addEventListener(MOUSE_OUT, [&]()->void
+	{
+		m_pBackButton->setAlpha(255);
+	});
+	addChild(m_pBackButton);
 
 	//// Next Button
 	//m_pNextButton = new Button("../Assets/textures/nextButton.png", "nextButton", NEXT_BUTTON);
