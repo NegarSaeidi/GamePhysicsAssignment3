@@ -112,9 +112,9 @@ void Ball::DrawPolygon()
 	int i;
 	for (i = 0; i < points.size() - 1; i++)
 	{
-		Util::DrawLine(points[i], points[i + 1], glm::vec4(230.0f / 255.0f, 92.0f / 255.0f, 0.0f/255.0f,255.0f/255.0f));
+		Util::DrawLine(points[i], points[i + 1], glm::vec4(0.0f,0.0f,0.0f,255.0f/255.0f));
 	}
-	Util::DrawLine(points[i], points[0], glm::vec4(230.0f / 255.0f, 92.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f));
+	Util::DrawLine(points[i], points[0], glm::vec4(0.0f, 0.0f, 0.0f, 255.0f / 255.0f));
 }
 
 void Ball::movePolygon(float deltaTime)
