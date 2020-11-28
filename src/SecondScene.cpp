@@ -47,6 +47,7 @@ void SecondScene::update()
 		}
 		updateDisplayList();
 	}
+	else
 	m_pBackButton->update();
 }
 

@@ -32,6 +32,7 @@ private:
 	BallShape ballshape;
 	float loss;
 	float friction;
+	float wallFriction;
 	float radius;
 	int numberOfvertices;
 	std::vector<glm::vec2> points;

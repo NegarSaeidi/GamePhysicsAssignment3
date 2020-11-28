@@ -24,6 +24,7 @@ Ball::Ball()
 	getRigidBody()->isColliding = false;
 	loss = -0.8f;
 	friction = -0.05f;
+	wallFriction = 0.9;
 	radius = getHeight() / 2.0f;
 	numberOfvertices = 3;
 	createPolygon(numberOfvertices);
@@ -157,22 +158,22 @@ void Ball::m_checkBounds()
 	if (x-radius/2 < 0)
 	{
 		getTransform()->position.x = 0.0 + radius / 2;
-		getRigidBody()->velocity *=glm::vec2( loss,-loss);
+		getRigidBody()->velocity *=glm::vec2( loss,wallFriction);
 	}
 	if (y-radius / 2 < 0)
 	{
 		getTransform()->position.y = 0.0+ radius / 2;
-		getRigidBody()->velocity*=glm::vec2(-loss, loss);
+		getRigidBody()->velocity*=glm::vec2(wallFriction, loss);
 	}
 	if (x +radius / 2 > 800)
 	{
 		getTransform()->position.x = 800- radius / 2;
-		getRigidBody()->velocity *= glm::vec2(loss, -loss);
+		getRigidBody()->velocity *= glm::vec2(loss, wallFriction);
 	}
 	if (y + radius / 2 > 600)
 	{
 		getTransform()->position.y = 600- radius / 2;
-		getRigidBody()->velocity *= glm::vec2(-loss, loss);
+		getRigidBody()->velocity *= glm::vec2(wallFriction, loss);
 	}
 }
 
